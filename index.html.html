@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>KnockoutJS Observable Example</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js" type="text/javascript"></script>
+   </head>
+   
+   <body>
+
+      <div class="container">
+         <h1 style="text-align: center;">Goal Tracker</h1>
+         <div id="addgoal">
+            <table class="table">
+               <thead class="thead-light">
+                  <tr>
+                     <th>Index</th>
+                     <th>Title</th>
+                     <th>Description</th>
+                     <th>Achieved</th>
+                     <th>Remove</th>
+                  </tr>
+               </thead>
+               <tbody data-bind="foreach:goal">
+                  <tr>
+                     <td><input type="text" class="form-control" data-bind="value:index"></td>
+                     <td><input type="text" class="form-control" data-bind="value:title"></td>
+                     <td><input type="text" class="form-control" data-bind="value:desc"></td>
+                     <td><input type="checkbox" class="form-control" data-bind="checked:achieved"></td>
+                     <td><button class="btn btn-danger" data-bind="click:$parent.removegoal">Remove</button></td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="form-group">
+               <label for="index">Index:</label>
+               <input id="index" type="text" class="form-control" placeholder="Enter index">
+            </div>
+            <div class="form-group">
+               <label for="goal">Title:</label>
+               <input id="goal" type="text" class="form-control" placeholder="Enter title">
+            </div>
+            <div class="form-group">
+               <label for="desc">Description:</label>
+               <input id="desc" type="text" class="form-control" placeholder="Enter description">
+            </div>
+            <button class="btn btn-primary" data-bind="click:addgoal">Add Goal</button>
+        </div>
+      </div>
+
+      <script>
+         function GoalModel(){
+            var self=this;
+            self.goal=ko.observableArray([{index:1,title:"Learn KnockoutJS",desc:"Learn KnockoutJS Framework",achieved:false},
+            {index:2,title:"Hit Gym",desc:"get abs",achieved:false},
+            {index:3,title:"Be calm",desc:"be calm in tough situations",achieved:false},
+            {index:4,title:"Buy car",desc:"buy good nice car",achieved:false}
+         ]);
+            self.addgoal=function(){
+               self.goal.push({index:parseInt($("#index").val()),title:$("#goal").val(),desc:$("#desc").val(),achieved:false});
+               $("#index").val("");
+               $("#goal").val("");
+               $("#desc").val("");
+            };
+            self.removegoal=function(goal){
+               self.goal.remove(goal);
+            };
+         }
+         ko.applyBindings(new GoalModel());
+      </script>
+      
+   </body>
+</html>
