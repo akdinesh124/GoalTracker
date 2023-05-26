@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\learncodefirstapproach.props" />
+</Project>

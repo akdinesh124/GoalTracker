@@ -1,0 +1,112 @@
+﻿
+<h2>Kendo Grid boud to ASP.NET MVC action methods</h2>
+@* The DIV where the Kendo grid will be initialized *@
+<div id="grid"></div>
+@section Scripts {
+    <script>
+        $(function () {
+            var input=null;
+            $("#grid").kendoGrid({
+                height: 400,
+                dataSource: {
+                 
+                    
+                    
+                    pageSize: 5,
+                    serverPaging: true ,
+                    serverFiltering: true,
+                    
+                    serverSorting: true,
+                    serverPaging: true,
+                    schema: {
+
+                        total: "total",
+                        data:"data",
+                      
+                        model: {
+                            id: "id",
+                            name: "name",
+                            isComplete: "isComplete",
+                            description: "description",
+                            fields: {
+                                id: { type: "long", editable: false },
+                                name: { type: "string"},
+                                isComplete: { type: "boolean" },
+                                description: { type: "string" }
+
+                            }
+                        }
+                    },
+                    batch: true, // enable batch editing - changes will be saved when the user clicks the "Save changes" button
+                    transport: {
+                        create: {
+                            url: "/home/create",//specify the URL which should create new records. This is the Create method of the HomeController.
+                            type: "POST",
+                            dataType: "json"//use HTTP POST request as the default GET is not allowed for ASMX
+                        },
+                        read: {
+                            url: "/home/read",
+
+                            dataType: "json"
+                            //use HTTP POST request as by default GET is not allowed by ASP.NET MVC
+                        },
+                        update: {
+                            url: "/home/edit", //specify the URL which should update the records. This is the Update method of the HomeController.
+                            type: "POST"
+
+                            //use HTTP POST request as by default GET is not allowed by ASP.NET MVC
+                        },
+                        destroy: {
+                            url: "/home/delete", //specify the URL which should destroy the records. This is the Destroy method of the HomeController.
+                            type: "POST" //use HTTP POST request as by default GET is not allowed by ASP.NET MVC
+                        },
+
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation === "read" && options.filter) {
+                            return {
+                                filter: JSON.stringify(options.filter)
+                            };
+                        }
+                        return options;
+                    }
+                
+                },
+                
+                columns: [
+                    {
+                        field: "id", title: "ID", filterable: false
+                    },
+                    { field: "name", title: "Name" },
+                    { field: "description", title: "Description" },
+                    { field: "isComplete", title: "isComplete", template: '<input type="checkbox" #= isComplete ? "checked=checked" : "" #  />' },
+                    { command: "destroy", title: "Delete", width: "150px" }
+
+                ],
+                editable: true,
+              // enable editing
+                sortable: true,
+                filterable:{
+
+                extra: false, // disable the extra filter UI
+            operators: {
+                string: { // customize the filter operators for string fields
+                    contains: "Contains",
+                    startswith: "Starts with",
+                    endswith: "Ends with"
+                }}},
+                        navigatable: true,
+                resizable: true,
+                reorderable: true,
+                pageable: {
+                    refresh: true,
+                //pageSizes: [5, 10, 50],
+                //buttonCount: 1
+                },
+               
+                toolbar: ["create", "save", "cancel"], // specify toolbar commands
+               
+            });
+        });
+    </script>
+}

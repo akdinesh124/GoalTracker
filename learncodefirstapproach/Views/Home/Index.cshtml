@@ -1,0 +1,135 @@
+﻿@model List<GoalItem>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <h1 style="text-align: center;">Goal Tracker</h1>
+    <button id='add' class="btn " data-bind="click:readGoal">Add</button>
+    <div id="addGoal">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                 
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody >
+
+            <tbody data-bind="foreach:goalArr">
+                <tr>
+                    <td><input id="text:Id" name="idd" type="text" class="form-control" data-bind="value:Id"></td>
+                    <td><input type="text" class="form-control" data-bind="value:Name"></td>
+                    <td><input type="text" class="form-control" data-bind="value:Description"></td>
+                   
+                    <td><button class="btn btn-danger" data-bind="click:function(){$parent.removeGoal(Id)}">Remove</button></td>
+                </tr>
+            </tbody>
+                <tr>
+
+                    <td><input type="text" data-bind="value:Id" class="form-control" ></td>
+                    <td><input type="text" data-bind="value:Name" class="form-control" ></td>
+                    <td><input type="text" data-bind="value:Description" class="form-control"></td>
+
+                    <td><button id='add' class="btn " data-bind="click:addGoal">Add</button></td>
+                </tr>
+
+            </tbody>
+        </table>
+   
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#add").click(function () {
+                   
+            });
+        });
+    </script>
+
+    <script>
+        function GoalModel() {
+            var self = this;
+            self.Id=ko.observable("g");
+            self.Name=ko.observable("g");
+            self.Description=ko.observable("g");
+                self.goalArr = ko.observableArray([{ "Id": "2", "Name": "Hit Gym", Description: "get abs", achieved: false },
+
+                ]);
+            self.readGoal=function(){
+        
+                    $.ajax({
+                        url: "home/read",
+                        method: "GET",
+                        success: function (response) {
+                            // Handle the success response, if needed
+                          
+                          
+                            var parsedResponse = JSON.parse(response);
+
+                            // Convert each element of the parsed response into an object
+                            var mappedData = ko.utils.arrayMap(parsedResponse, function (item) {
+                                return {
+                                    Id: item.Id,
+                                    Name: item.Name,
+                                    IsComplete: item.IsComplete,
+                                    Description: item.Description
+                                };
+                            });
+
+                            // Update the observable array with the mapped data
+                            self.goalArr(mappedData);
+                         
+
+                            // Loop through the response array
+                            
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error, if needed
+                        }
+                    });
+            },
+            self.addGoal = function () {
+                    var id = self.Id;
+                    var name = self.Name;
+                    var desc = self.Description;
+                    $.ajax({
+                        url: "home/create",
+                        method: "POST",
+                        data: { id: Id, name: Name, desc: Description },
+                        success: function (response) {
+                            // Handle the success response, if needed
+                            alert('ooo');
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error, if needed
+                        }
+                    });
+            };
+            
+            self.removeGoal = function (Id) {
+                    var id = document.getElementById("idd");
+                 
+                    var name = self.goal;
+                    var desc = self.desc;
+                    $.ajax({
+                        url: "home/delete",
+                        method: "POST",
+                        data: { Id: Id },
+                        success: function (response) {
+                            // Hadle he success response, if needed
+                          
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error, if needed
+                        }
+                    });
+            };
+        }
+        ko.applyBindings(new GoalModel());
+    </script>
+}

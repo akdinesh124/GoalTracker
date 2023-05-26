@@ -1,0 +1,68 @@
+﻿@model GoalItem
+@{
+    ViewData["Title"] = "Edit Todo Item";
+}
+
+<style>
+    form input {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    form button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        form button:hover {
+            background-color: #3e8e41;
+        }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+</style>
+
+<div class="container">
+    <h1 class="text-center">Edit Todo Item</h1>
+
+    <form asp-controller="Home" asp-action="Edit" method="post">
+        <div class="form-group">
+            <label for="Id">Id:</label>
+            <input asp-for="Id" class="form-control" readonly value="@ViewBag.id" />
+        </div>
+
+        <div class="form-group">
+            <label for="Name">Name:</label>
+            <input asp-for="Name" class="form-control" value="@ViewBag.name" />
+        </div>
+
+        <div class="form-group">
+            <label for="IsComplete">Is Complete:</label>
+            <input asp-for="IsComplete" class="form-check-input" checked="@ViewBag.isComplete" />
+        </div>
+
+        <div class="form-group">
+            <label for="Description">Description:</label>
+            <input asp-for="Description" class="form-control" value="@ViewBag.description" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
